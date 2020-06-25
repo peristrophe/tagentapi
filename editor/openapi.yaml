@@ -1,0 +1,139 @@
+openapi: 3.0.1
+
+info:
+  version: 1.0.0
+  title: Twitch API Agent
+  description: New Twitch API Agent.
+
+servers:
+  - url: https://dev.sample-server.com/v1
+    description: Development
+  - url: https://stg.sample-server.com/v1
+    description: Staging
+  - url: https://api.sample-server.com/v1
+    description: Production
+
+paths:
+  /users/{userId}:
+    get:
+      tags:
+        - users
+      summary: Get user by Twitch User ID.
+      description: Return a single user model.
+      parameters:
+        - name: userId
+          in: path
+          description: Twitch User ID.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single user model.
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/User'
+                example:
+                  id: '44322889'
+                  loginName: 'peristrophe'
+                  displayName: '緋緋色金'
+                  type: 'staff'
+                  broadcasterType: ''
+                  description: 'Hello, twitch'
+                  profileImageUrl: 'https://example.com/path/to/assets'
+                  offlineImageUrl: 'https://example.com/path/to/assets'
+                  email: 'peristrophe@example.com'
+  
+  /streams:
+    get:
+      tags:
+        - streams
+      summary: Get Twitch streams.
+      description: Return stream models.
+      responses:
+        '200':
+          description: Stream models.
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Stream'
+                example:
+                  id: '26007494656'
+                  userId: '23161357'
+                  userName: 'peristrophe'
+                  gameId: '417752'
+                  type: 'live'
+                  title: 'NIOH 2 first playthrough [No Commentary]'
+                  viewerCount: 3
+                  startedAt: '2020-05-05T05:05:05Z'
+                  language: 'ja'
+                  thumbnailUrl: 'https://example.com/path/to/assets'
+
+components:
+  schemas:
+
+    User:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        loginName:
+          type: string
+        displayName:
+          type: string
+        type:
+          type: string
+        broadcasterType:
+          type: string
+        description:
+          type: string
+        profileImageUrl:
+          type: string
+          format: url
+        offlineImageUrl:
+          type: string
+          format: url
+        email:
+          type: string
+          format: e-mail
+
+    Stream:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        userName:
+          type: string
+        gameId:
+          type: string
+        type:
+          type: string
+        title:
+          type: string
+        viewerCount:
+          type: integer
+        startedAt:
+          type: string
+        language:
+          type: string
+          format: iso8601
+        thumbnailUrl:
+          type: string
+          format: url
+
+tags:
+  - name: users
+    description: About Twitch User
+  - name: streams
+    description: About Twitch Live Stream
